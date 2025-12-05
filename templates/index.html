@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simulasi SIR RK4</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <h1>Simulasi Data-Driven COVID-19 Indonesia Menggunakan Model SIR dan Runge-Kutta Orde-4 (RK4)</h1>
+      <p>Upload dataset, pilih negara, lalu jalankan tuning parameter β dan γ.</p>
+    </header>
+
+    <section class="card">
+      <form method="POST" enctype="multipart/form-data" class="form">
+        <div class="form-row">
+          <label>Upload CSV (opsional):</label>
+          <input type="file" name="file" accept=".csv"/>
+          <small>Kalau tidak upload, sistem memakai file default di server.</small>
+        </div>
+
+        <div class="form-row">
+          <label>Pilih Negara:</label>
+          <select name="country">
+            {% for c in countries %}
+              <option value="{{ c }}" {% if c == selected_country %}selected{% endif %}>
+                {{ c }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- ====== Populasi N dibatasi hanya 4 pilihan ====== -->
+        <div class="form-row">
+          <label>Populasi N:</label>
+          <select name="population">
+            <option value="270000000" {% if selected_N==270000000 %}selected{% endif %}>
+              270000000 (Populasi Indonesia riil)
+            </option>
+            <option value="5000000" {% if selected_N==5000000 %}selected{% endif %}>
+              5000000 (Effective population fitting)
+            </option>
+            <option value="10000000" {% if selected_N==10000000 %}selected{% endif %}>
+              10000000
+            </option>
+            <option value="100000000" {% if selected_N==100000000 %}selected{% endif %}>
+              100000000
+            </option>
+          </select>
+          <small>Pilih salah satu nilai populasi yang disediakan.</small>
+        </div>
+
+        <button class="btn" type="submit">Jalankan Simulasi</button>
+      </form>
+    </section>
+
+    {% if result %}
+    <section class="card results">
+      <h2>Hasil Parameter Terbaik</h2>
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-label">β (beta)</span>
+          <span class="stat-value">{{ "%.6f"|format(result.beta) }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">γ (gamma)</span>
+          <span class="stat-value">{{ "%.6f"|format(result.gamma) }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">RMSE</span>
+          <span class="stat-value">{{ "%.8f"|format(result.rmse) }}</span>
+        </div>
+        {% if result.R0 %}
+        <div class="stat">
+          <span class="stat-label">R₀ = β/γ</span>
+          <span class="stat-value">{{ "%.3f"|format(result.R0) }}</span>
+        </div>
+        {% endif %}
+      </div>
+    </section>
+    {% endif %}
+
+    {% if plot1 %}
+    <section class="card">
+      <h2>Overlay Data Asli vs Simulasi RK4 (I(t))</h2>
+      <img class="plot" src="data:image/png;base64,{{ plot1 }}" alt="Overlay Plot"/>
+    </section>
+    {% endif %}
+
+    {% if plot2 %}
+    <section class="card">
+      <h2>Dinamika S(t) dan R(t) (Simulasi)</h2>
+      <img class="plot" src="data:image/png;base64,{{ plot2 }}" alt="S and R Plot"/>
+    </section>
+    {% endif %}
+
+    <footer class="footer">
+      <p>Praktikum Pemodelan & Simulasi — SIR + RK4 Manual + Tuning Parameter</p>
+    </footer>
+  </div>
+</body>
+</html>
