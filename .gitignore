@@ -1,0 +1,46 @@
+# =========================
+# Python cache / build
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+dist/
+build/
+
+# =========================
+# Virtual environment
+# =========================
+venv/
+.venv/
+env/
+ENV/
+pip-wheel-metadata/
+
+# =========================
+# Jupyter / Notebook
+# =========================
+.ipynb_checkpoints/
+*.nbconvert.ipynb
+
+# =========================
+# Flask uploads & outputs
+# =========================
+uploads/
+*.log
+
+# =========================
+# OS / Editor junk
+# =========================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.*
